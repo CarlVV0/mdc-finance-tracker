@@ -48,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <div className="flex items-center space-x-3">
             <span className="text-sm hidden sm:inline-block">
-              {currentUser?.name}
+              {currentUser?.name || currentUser?.email}
             </span>
             <Button
               variant="ghost"
@@ -99,7 +99,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {currentUser?.name}
+                    {currentUser?.name || currentUser?.email || 'User'}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
                     {isAdmin() ? 'Administrator' : 'Regular User'}

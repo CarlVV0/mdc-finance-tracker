@@ -1,10 +1,15 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from "sonner";
 
-interface Profile {
+export interface User extends SupabaseUser {
+  name?: string;
+  date?: string;
+  role?: 'admin' | 'user';
+}
+
+export interface Profile {
   id: string;
   username: string;
   role: 'admin' | 'user';
@@ -35,18 +40,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setCurrentUser(session?.user ?? null);
       if (session?.user) {
-        fetchUserProfile(session.user.id);
+        // Cast to our extended User type
+        const user = session.user as User;
+        // Add name from user metadata if available
+        if (user.user_metadata && user.user_metadata.username) {
+          user.name = user.user_metadata.username;
+        }
+        setCurrentUser(user);
+        fetchUserProfile(user.id);
+      } else {
+        setCurrentUser(null);
       }
+      setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentUser(session?.user ?? null);
       if (session?.user) {
-        fetchUserProfile(session.user.id);
+        // Cast to our extended User type
+        const user = session.user as User;
+        // Add name from user metadata if available
+        if (user.user_metadata && user.user_metadata.username) {
+          user.name = user.user_metadata.username;
+        }
+        setCurrentUser(user);
+        fetchUserProfile(user.id);
       } else {
+        setCurrentUser(null);
         setUserProfile(null);
       }
     });
@@ -67,6 +88,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     setUserProfile(data);
+    
+    // If currentUser exists, enhance it with profile data
+    if (currentUser) {
+      setCurrentUser(prevUser => {
+        if (!prevUser) return null;
+        return {
+          ...prevUser,
+          name: data.username, // Set name from profile
+          role: data.role,
+          date: data.created_at // Set created_at date
+        };
+      });
+    }
   };
 
   const login = async (email: string, password: string) => {
@@ -156,6 +190,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (userProfile) {
         setUserProfile({ ...userProfile, ...updates });
+        
+        // Update the currentUser with new profile data if applicable
+        if (updates.username) {
+          setCurrentUser(prevUser => {
+            if (!prevUser) return null;
+            return { ...prevUser, name: updates.username };
+          });
+        }
       }
       
       toast.success('Profile updated successfully');
@@ -180,7 +222,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const isAdmin = () => {
-    return userProfile?.role === 'admin';
+    return userProfile?.role === 'admin' || currentUser?.role === 'admin';
   };
 
   return (
