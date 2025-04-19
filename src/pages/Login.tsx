@@ -28,70 +28,75 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#1E90FF] via-[#9B51E0] to-[#E23B84] p-4">
       <div className="max-w-md w-full">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-budget-primary text-white mb-4">
-            <Lock className="h-8 w-8" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-800">MDC-Cast-Budget</h1>
-          <p className="text-gray-600 mt-1">Sign in to your account</p>
+        <div className="flex justify-center space-x-6 mb-8">
+          <img 
+            src="/lovable-uploads/e73439e3-24a6-4ca0-97ab-73947d532fc3.png" 
+            alt="MDC Logo" 
+            className="w-24 h-24 object-contain"
+          />
+          <img 
+            src="/lovable-uploads/e73439e3-24a6-4ca0-97ab-73947d532fc3.png" 
+            alt="Cast Budget Logo" 
+            className="w-24 h-24 object-contain"
+          />
         </div>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Login</CardTitle>
-            <CardDescription>
-              Enter your credentials to access your account
-            </CardDescription>
-          </CardHeader>
+        <h2 className="text-center text-3xl font-bold text-white mb-6">
+          MDC-CAST BUDGET TRACKER SYSTEM
+        </h2>
+        
+        <Card className="bg-white/90 backdrop-blur-sm">
           <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-gray-700">Username</Label>
                 <Input 
                   id="email"
                   type="email" 
-                  placeholder="name@example.com" 
+                  placeholder="Enter your username" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className="bg-gray-100 border-gray-300"
                 />
               </div>
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link 
-                    to="/forgot-password" 
-                    className="text-xs text-budget-accent hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+                <Label htmlFor="password" className="text-gray-700">Password</Label>
                 <Input 
                   id="password"
                   type="password" 
-                  placeholder="••••••••" 
+                  placeholder="Enter your password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="bg-gray-100 border-gray-300"
                 />
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
               <Button 
                 type="submit" 
-                className="w-full bg-budget-primary hover:bg-budget-primary/90"
+                className="w-full bg-[#1E90FF] hover:bg-[#1E90FF]/90 text-white"
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? 'Signing in...' : 'LOGIN'}
               </Button>
-              <p className="text-center text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link to="/signup" className="text-budget-accent hover:underline">
-                  Sign up
-                </Link>
-              </p>
+              <Button 
+                type="button" 
+                variant="outline"
+                className="w-full border-[#9B51E0] text-[#9B51E0] hover:bg-[#9B51E0]/10"
+                onClick={() => navigate('/signup')}
+              >
+                SIGN UP
+              </Button>
+              <Link 
+                to="/forgot-password" 
+                className="text-sm text-[#E23B84] hover:underline"
+              >
+                Forgot password?
+              </Link>
             </CardFooter>
           </form>
         </Card>
