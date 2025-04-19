@@ -18,16 +18,9 @@ const Signup = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
     
     // Validate passwords match
     if (password !== confirmPassword) {
@@ -36,32 +29,26 @@ const Signup = () => {
     }
     
     setIsLoading(true);
+    const success = signup(name, email, password);
+    setIsLoading(false);
     
-    try {
-      // Call signup with the correct parameter order: email, password, name
-      await signup(email, password, name);
-      // Navigate after successful signup
+    if (success) {
       navigate('/login');
-    } catch (error: any) {
-      setError(error.message || 'Failed to create an account');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#1E90FF] via-[#9B51E0] to-[#E23B84] p-4 rounded-none py-0 px-0">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="max-w-md w-full">
-        <div className="flex justify-center space-x-6 mb-8">
-          <img src="/lovable-uploads/e73439e3-24a6-4ca0-97ab-73947d532fc3.png" alt="MDC Logo" className="w-24 h-24 object-contain" />
-          <img src="/lovable-uploads/e73439e3-24a6-4ca0-97ab-73947d532fc3.png" alt="Cast Budget Logo" className="w-24 h-24 object-contain" />
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-budget-primary text-white mb-4">
+            <UserPlus className="h-8 w-8" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800">MDC-Cast-Budget</h1>
+          <p className="text-gray-600 mt-1">Create your account</p>
         </div>
         
-        <h2 className="text-center text-3xl font-bold text-white mb-6">
-          MDC-CAST BUDGET TRACKER SYSTEM
-        </h2>
-        
-        <Card className="glass mx-0 px-0 py-0 my-0 rounded-2xl">
+        <Card>
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
             <CardDescription>
@@ -84,7 +71,6 @@ const Signup = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="bg-white/20 backdrop-blur-sm border-white/20 text-white placeholder:text-white/70"
                 />
               </div>
               <div className="space-y-2">
@@ -96,7 +82,6 @@ const Signup = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-white/20 backdrop-blur-sm border-white/20 text-white placeholder:text-white/70"
                 />
               </div>
               <div className="space-y-2">
@@ -108,7 +93,6 @@ const Signup = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-white/20 backdrop-blur-sm border-white/20 text-white placeholder:text-white/70"
                 />
               </div>
               <div className="space-y-2">
@@ -120,21 +104,20 @@ const Signup = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="bg-white/20 backdrop-blur-sm border-white/20 text-white placeholder:text-white/70"
                 />
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
               <Button 
                 type="submit" 
-                className="w-full bg-[#1E90FF] hover:bg-[#1E90FF]/90 text-white"
+                className="w-full bg-budget-primary hover:bg-budget-primary/90"
                 disabled={isLoading}
               >
-                {isLoading ? 'Creating account...' : 'CREATE ACCOUNT'}
+                {isLoading ? 'Creating account...' : 'Create account'}
               </Button>
-              <p className="text-center text-sm text-white">
+              <p className="text-center text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link to="/login" className="text-[#E23B84] hover:underline">
+                <Link to="/login" className="text-budget-accent hover:underline">
                   Sign in
                 </Link>
               </p>

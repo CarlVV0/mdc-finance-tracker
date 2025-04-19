@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { User, Settings, Lock } from 'lucide-react';
 
 const Profile = () => {
-  const { currentUser, userProfile, updateProfile, changePassword } = useAuth();
+  const { currentUser, updateProfile, changePassword } = useAuth();
   
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(currentUser?.name || '');
@@ -32,15 +32,14 @@ const Profile = () => {
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   
   const handleSave = () => {
-    if (!userProfile) return;
-    
-    updateProfile({
-      username: name,
-    }).then(() => {
-      setIsEditing(false);
-    }).catch(error => {
-      console.error("Failed to update profile:", error);
+    const success = updateProfile({
+      name,
+      email,
     });
+    
+    if (success) {
+      setIsEditing(false);
+    }
   };
   
   const handleCancel = () => {
@@ -57,16 +56,13 @@ const Profile = () => {
       return;
     }
     
-    changePassword(oldPassword, newPassword)
-      .then(() => {
-        setOldPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setIsPasswordDialogOpen(false);
-      })
-      .catch(error => {
-        console.error("Failed to change password:", error);
-      });
+    const success = changePassword(oldPassword, newPassword);
+    if (success) {
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setIsPasswordDialogOpen(false);
+    }
   };
   
   const formatDate = (dateString: string) => {
@@ -131,7 +127,6 @@ const Profile = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      disabled
                     />
                   </div>
                 </div>
@@ -140,7 +135,7 @@ const Profile = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm font-medium text-gray-500">Full Name</p>
-                      <p className="text-lg font-medium">{currentUser?.name || 'N/A'}</p>
+                      <p className="text-lg font-medium">{currentUser?.name}</p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Email Address</p>
@@ -149,13 +144,13 @@ const Profile = () => {
                     <div>
                       <p className="text-sm font-medium text-gray-500">Account Type</p>
                       <p className="text-lg font-medium">
-                        {userProfile?.role === 'admin' ? 'Administrator' : 'Regular User'}
+                        {currentUser?.role === 'admin' ? 'Administrator' : 'Regular User'}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Account Created</p>
                       <p className="text-lg font-medium">
-                        {userProfile?.created_at ? formatDate(userProfile.created_at) : 'N/A'}
+                        {currentUser?.date ? formatDate(currentUser.date) : 'N/A'}
                       </p>
                     </div>
                   </div>

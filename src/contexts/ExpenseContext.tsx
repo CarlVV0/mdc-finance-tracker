@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext';
-import { User } from './AuthContext';
+import { useAuth, User } from './AuthContext';
 import { toast } from "sonner";
 
 // Define the Expense type
@@ -63,7 +62,7 @@ export const ExpenseProvider: React.FC<{ children: React.ReactNode }> = ({ child
       ...expense,
       id: Date.now().toString(),
       userId: currentUser.id,
-      userName: currentUser.name || 'Unknown User',
+      userName: currentUser.name,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

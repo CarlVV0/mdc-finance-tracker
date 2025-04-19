@@ -36,24 +36,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1E90FF] via-[#9B51E0] to-[#E23B84]">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-lg border-b border-white/20 text-white shadow-md">
+      <header className="bg-budget-primary text-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-bold">MDC-Cast-Budget Tracker</h1>
-            <span className="bg-white/20 text-white text-xs font-bold py-1 px-2 rounded backdrop-blur-lg">
+            <span className="bg-white text-budget-primary text-xs font-bold py-1 px-2 rounded">
               {isAdmin() ? 'ADMIN' : 'USER'}
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <span className="text-sm hidden sm:inline-block">
-              {currentUser?.name || currentUser?.email}
+              {currentUser?.name}
             </span>
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-budget-primary/20"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4 mr-2" />
@@ -65,17 +65,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="bg-white/10 backdrop-blur-lg w-64 shadow-md hidden md:block border-r border-white/20">
+        <aside className="bg-white w-64 shadow-md hidden md:block">
           <nav className="p-4 flex flex-col h-full">
             <div className="flex-1">
-              {/* Logo Images */}
-              <div className="flex justify-center space-x-6 mb-8">
-                <img src="/lovable-uploads/e73439e3-24a6-4ca0-97ab-73947d532fc3.png" alt="MDC Logo" className="w-24 h-24 object-contain" />
-                <img src="/lovable-uploads/e73439e3-24a6-4ca0-97ab-73947d532fc3.png" alt="Cast Budget Logo" className="w-24 h-24 object-contain" />
-              </div>
-              
               <div className="mb-6">
-                <p className="text-xs font-semibold text-white/70 uppercase mb-2">
+                <p className="text-xs font-semibold text-gray-400 uppercase mb-2">
                   Main Menu
                 </p>
                 <ul className="space-y-1">
@@ -85,8 +79,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         to={item.path}
                         className={`flex items-center px-3 py-2 rounded-md text-sm ${
                           location.pathname === item.path
-                            ? 'bg-white/20 text-white'
-                            : 'text-white/70 hover:bg-white/10'
+                            ? 'bg-budget-primary text-white'
+                            : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
                         <item.icon className="h-4 w-4 mr-3" />
@@ -98,16 +92,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </div>
             </div>
 
-            <div className="border-t border-white/20 pt-4">
+            <div className="border-t pt-4">
               <div className="flex items-center px-4 py-2">
-                <div className="bg-white/20 rounded-full h-8 w-8 flex items-center justify-center mr-3">
-                  <User className="h-4 w-4 text-white" />
+                <div className="bg-gray-200 rounded-full h-8 w-8 flex items-center justify-center mr-3">
+                  <User className="h-4 w-4 text-gray-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    {currentUser?.name || currentUser?.email || 'User'}
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {currentUser?.name}
                   </p>
-                  <p className="text-xs text-white/70 truncate">
+                  <p className="text-xs text-gray-500 truncate">
                     {isAdmin() ? 'Administrator' : 'Regular User'}
                   </p>
                 </div>
@@ -117,7 +111,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </aside>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden bg-white/10 backdrop-blur-lg shadow-md fixed bottom-0 left-0 right-0 z-10 border-t border-white/20">
+        <div className="md:hidden bg-white shadow-md fixed bottom-0 left-0 right-0 z-10">
           <div className="flex justify-around">
             {menuItems.map((item) => (
               <Link
@@ -125,8 +119,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 to={item.path}
                 className={`p-3 flex flex-col items-center text-xs ${
                   location.pathname === item.path
-                    ? 'text-white'
-                    : 'text-white/70'
+                    ? 'text-budget-primary'
+                    : 'text-gray-500'
                 }`}
               >
                 <item.icon className="h-5 w-5 mb-1" />
@@ -138,9 +132,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto p-4 md:p-6 pb-20 md:pb-6">
-          <div className="bg-white/10 backdrop-blur-lg rounded-lg border border-white/20 p-6">
-            {children}
-          </div>
+          {children}
         </main>
       </div>
     </div>
